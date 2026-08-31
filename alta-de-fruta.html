@@ -667,6 +667,10 @@ const MAESTRA_INICIAL = [
   {finca:'SOFIA I',        alias:'sofia 1, f sofia 1, sofia i',     emp:'SAPSAS',      bins:'BIN',    mat:'ORGANICO',    traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'ORG'},
   {finca:'SOFIA II',       alias:'sofia 2, f sofia 2, sofia ii',    emp:'RANDSTAD',    bins:'BOLSON', mat:'ORGANICO',    traza:'', cul:'', tercero:false,prod:'SA SAN MIGUEL',zona:'NORTE',aplic:'ORG'},
   {finca:'SOFIA II',       alias:'sofia 2, f sofia 2, sofia ii',    emp:'SAPSAS',      bins:'BIN',    mat:'ORGANICO',    traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'ORG'},
+  // Sofía III cosecha orgánico y convencional según el día, así que no se le
+  // fija la variedad: la toma del mensaje, y la aplicación sale de ahí (ORG o AP0).
+  {finca:'SOFIA III',      alias:'sofia 3, f sofia 3, sofia iii, sofia 03', emp:'RANDSTAD', bins:'BOLSON', mat:'', traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', zona:'NORTE', aplic:''},
+  {finca:'SOFIA III',      alias:'sofia 3, f sofia 3, sofia iii, sofia 03', emp:'SAPSAS',   bins:'BIN',    mat:'', traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', zona:'NORTE', aplic:''},
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'LA ASTURIANA',bins:'BOLSON', mat:'CONVENCIONAL',traza:'', cul:'', tercero:false,prod:'SA SAN MIGUEL',zona:'SUR',aplic:'AP0'},
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'SAPSAS',      bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'AP0'},
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'RANDSTAD',    bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'AP0'},
@@ -699,7 +703,7 @@ const MAESTRA_INICIAL = [
 const TN_POR_BIN = 0.4;
 // Subir este número cada vez que cambie la maestra del archivo:
 // así la copia guardada en el navegador no tapa la versión nueva.
-const MAESTRA_VERSION = 9;
+const MAESTRA_VERSION = 10;
 
 let state = {
   mv: MAESTRA_VERSION,

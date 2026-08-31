@@ -1342,7 +1342,10 @@ async function nubeSubir(){
       {method:'PATCH',headers:{'Content-Type':'application/json',...auth()},body:JSON.stringify(cuerpo)});
     if(r.status===401 && !NUBE.reintento){ NUBE.reintento=1; await nubeLogin(); NUBE.subiendo=false;
       const x=await nubeSubir(); NUBE.reintento=0; return x; }
-    if(!r.ok){ const e=await r.json(); throw new Error(e.error?.message||r.status); }
+    if(!r.ok){
+      const e=await r.json().catch(()=>({}));
+      throw new Error(`${r.status} · ${e.error?.status||''} · ${e.error?.message||'sin detalle'}`);
+    }
     NUBE.ultimaRev=rev;
     nubeEstado(`Guardado en la nube · ${new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})} · ${esc(NUBE.quien||'')}`,'ok');
   }catch(err){
@@ -1357,7 +1360,10 @@ async function nubeBajar(avisar){
     if(r.status===401 && !NUBE.reintento){ NUBE.reintento=1; await nubeLogin();
       const x=await nubeBajar(avisar); NUBE.reintento=0; return x; }
     if(r.status===404){ if(avisar) nubeEstado('Todavía no hay nada cargado en la nube para el '+state.fecha.split('-').reverse().join('/')+'.','ok'); return; }
-    if(!r.ok){ const e=await r.json(); throw new Error(e.error?.message||r.status); }
+    if(!r.ok){
+      const e=await r.json().catch(()=>({}));
+      throw new Error(`${r.status} · ${e.error?.status||''} · ${e.error?.message||'sin detalle'}`);
+    }
     const d=await r.json();
     const f=d.fields||{};
     const rev=+(f.rev?.integerValue||0);
@@ -1371,7 +1377,12 @@ async function nubeBajar(avisar){
     const q=f.quien?.stringValue||'', c=f.cuando?.stringValue;
     nubeEstado(`Traído de la nube · última carga de <b>${esc(q)}</b>${c?' a las '+new Date(c).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}):''}`,'ok');
   }catch(err){
-    nubeEstado('No pude traer de la nube: '+esc(String(err.message||err)),'err');
+    const m=String(err.message||err);
+    let pista='';
+    if(/Quota/i.test(m)) pista='<br>Suele ser que falta crear la base de Firestore en el proyecto, o que la API de Firestore no está habilitada. Entrá a <b>Firestore Database</b> y fijate que exista la base.';
+    if(/PERMISSION_DENIED/i.test(m)) pista='<br>Las reglas están rechazando el acceso. Revisá que estén publicadas las que permiten <code>/dias</code> y <code>/config</code> con sesión iniciada.';
+    if(/NOT_FOUND/i.test(m)) pista='<br>No existe la base de datos de Firestore en este proyecto todavía.';
+    nubeEstado('No pude traer de la nube: '+esc(m)+pista,'err');
   }
 }
 
@@ -1849,12 +1860,14 @@ function numCerca(txt, pal){
 // que tiene más cerca, y un número que ya se usó no se vuelve a usar. Así
 // no importa si el número va antes o después de la palabra.
 const ETIQUETAS={
-  cuad:'cuadrillas?|cuad\\b',
-  pers:'personas?|gente|personal',
-  bins:'bins?|bolsones?|bolson|estimado[s]?|cosecha|real'
+  cuad:'cuadrillas?|cuadr?\\b|cuad\\b',
+  pers:'personas?|persona|pers\\b|per\\b|gente|personal',
+  bins:'bins?|bolsones?|bolson|estimad[oa]s?|esti\\b|est\\b|cosecha|real'
 };
 function asignarNumeros(txt){
-  const n=normal(txt).replace(/\n/g,' ');
+  // hay quien escribe "Cuad.2" o "Pers.22": el punto pegado entre la palabra
+  // y el número se trata como un espacio.
+  const n=normal(txt).replace(/\n/g,' ').replace(/([a-z])\.(?=\d)/g,'$1 ');
   const nums=[]; let m;
   const rn=/\d{1,5}/g;
   while((m=rn.exec(n))) nums.push({v:parseInt(m[0],10), i:m.index, f:m.index+m[0].length, usado:false});
@@ -1893,9 +1906,9 @@ function parsearEstimado(texto){
     const t=msg.lineas.join('\n');
     const finca=buscarFinca(t); if(!finca) return;
     const emp=buscarEmpresa(t);
-    const bins = numCerca(t,'estimad[oa]s?') ?? numCerca(t,'cosecha');
-    if(bins===null) return;
     const asig = asignarNumeros(t);
+    const bins = asig.bins ?? numCerca(t,'estimad[oa]s?') ?? numCerca(t,'cosecha');
+    if(bins===null || bins===undefined) return;
     const pers = asig.pers ?? numCerca(t,'personas?|gente');
     const cuad = asig.cuad ?? numCerca(t,'cuadrillas?');
     const nn=normal(t);

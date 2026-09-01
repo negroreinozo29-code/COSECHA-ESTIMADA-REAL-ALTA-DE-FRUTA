@@ -185,6 +185,11 @@ input.ed::placeholder{color:var(--alerta);font-style:italic;font-size:12px}
 .sep{color:var(--renglon)}
 .traza{font-weight:500;letter-spacing:.04em;width:104px;flex:0 0 104px}
 .cul{font-weight:500;letter-spacing:.06em;width:76px;flex:0 0 76px}
+.ya-trabajado{
+  font-family:var(--sans);font-size:13px;color:var(--gris);
+  border-left:3px solid var(--tinta);padding:6px 0 6px 11px;margin-bottom:8px;
+}
+.ya-trabajado b{color:var(--tinta)}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:6px;vertical-align:middle}
 .dot.off{background:#C9C3B8}
 .dot.on{background:#2E9E63}
@@ -453,6 +458,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
   <section class="panel on" id="p-pegar">
     <div class="grid-pegar">
       <div>
+        <div id="aviso-chat"></div>
         <textarea id="chat" placeholder="Pegá acá el chat del turno tarde, tal cual sale de WhatsApp.
 Podés pegar todo junto: el parser separa mensaje por mensaje."></textarea>
         <label class="lbl-pbi" for="powerbi">Ya dado de alta — pegá acá el cuadro del Power BI (opcional)</label>
@@ -1145,6 +1151,7 @@ function marcarCorr(bs,flag){ (bs||[]).forEach(b=>b.esCorreccion=flag); return b
 function parsear(){
   const txt = document.getElementById('chat').value;
   state.textoChat = txt;
+  state.chatCuando = new Date().toISOString();
   state.crudo = txt;
   const ter = extraerTerceros(txt);
   state.dudas = ter.dudas;
@@ -1378,6 +1385,8 @@ async function nubeBajar(avisar){
     Object.assign(state, dat);
     NUBE.ultimaRev=rev;
     render();
+    const ta=document.getElementById('chat'); if(ta) ta.value=state.textoChat||'';
+    repoblarChat();
     const q=f.quien?.stringValue||'', c=f.cuando?.stringValue;
     nubeEstado(`Traído de la nube · última carga de <b>${esc(q)}</b>${c?' a las '+new Date(c).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}):''}`,'ok');
   }catch(err){
@@ -2112,6 +2121,8 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>irA(t.dataset.p));
 document.getElementById('fecha').value=state.fecha;
 document.getElementById('fecha').onchange=e=>{
   state.fecha=e.target.value; guardar(); render();
+  const ta=document.getElementById('chat'); if(ta) ta.value=state.textoChat||'';
+  repoblarChat();
   if(typeof NUBE!=='undefined' && NUBE.on){ NUBE.ultimaRev=0; nubeBajar(true); }
 };
 
@@ -2198,7 +2209,12 @@ document.getElementById('file-restore').onchange=e=>{
 document.getElementById('btn-ajuste').onclick=aplicarAjuste;
 document.getElementById('btn-parse').onclick=parsear;
 document.getElementById('btn-pbi').onclick=aplicarPBI;
-document.getElementById('btn-limpiar').onclick=()=>{document.getElementById('chat').value='';};
+document.getElementById('btn-limpiar').onclick=()=>{
+  document.getElementById('chat').value='';
+  state.textoChat=''; state.chatCuando='';
+  guardar();
+  const av=document.getElementById('aviso-chat'); if(av) av.innerHTML='';
+};
 document.getElementById('btn-destildar').onclick=()=>{
   state.bloques.forEach(b=>b.lotes.forEach(l=>{l.hecho=false;l.hora='';}));
   guardar();render();
@@ -2404,11 +2420,31 @@ Sup torres`;
   irA('pegar');
 };
 
+// Al abrir, la caja vuelve con lo último que se pegó y una línea avisa que
+// ese día ya viene trabajado, para no arrancar creyendo que está vacío.
+function repoblarChat(){
+  const ta=document.getElementById('chat');
+  const av=document.getElementById('aviso-chat');
+  if(!ta||!av) return;
+  if(!state.textoChat){ av.innerHTML=''; return; }
+  if(!ta.value) ta.value=state.textoChat;
+  const n=(state.bloques||[]).length;
+  let cuando='';
+  if(state.chatCuando){
+    const d=new Date(state.chatCuando);
+    cuando=' el '+d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})+
+           ' a las '+d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+  av.innerHTML='<div class="ya-trabajado">Estos mensajes los pegaste'+cuando+
+    (n?'. La hoja ya tiene <b>'+n+'</b> '+(n===1?'finca cargada':'fincas cargadas'):'')+'.</div>';
+}
+
 /* init */
 (async()=>{
   await cargar();
   document.getElementById('fecha').value=state.fecha;
   render();
+  repoblarChat();
 })();
 </script>
 </body>

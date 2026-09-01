@@ -185,6 +185,11 @@ input.ed::placeholder{color:var(--alerta);font-style:italic;font-size:12px}
 .sep{color:var(--renglon)}
 .traza{font-weight:500;letter-spacing:.04em;width:104px;flex:0 0 104px}
 .cul{font-weight:500;letter-spacing:.06em;width:76px;flex:0 0 76px}
+.ver{
+  font-family:var(--mono);font-size:11px;font-weight:500;color:var(--gris);
+  border:1px solid var(--renglon);border-radius:2px;padding:1px 6px;margin-left:8px;
+  vertical-align:middle;letter-spacing:.02em;
+}
 .ya-trabajado{
   font-family:var(--sans);font-size:13px;color:var(--gris);
   border-left:3px solid var(--tinta);padding:6px 0 6px 11px;margin-bottom:8px;
@@ -436,7 +441,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
 
 <header class="top">
   <div class="top-in">
-    <div class="marca">Alta de Fruta <span>/ turno noche</span></div>
+    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.12</b></div>
     <div class="fecha-box">
       <label for="fecha">Fecha de cosecha</label>
       <input type="date" id="fecha">

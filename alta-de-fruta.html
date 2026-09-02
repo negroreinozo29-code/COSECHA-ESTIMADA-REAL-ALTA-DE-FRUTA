@@ -441,7 +441,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
 
 <header class="top">
   <div class="top-in">
-    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.12</b></div>
+    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.13</b></div>
     <div class="fecha-box">
       <label for="fecha">Fecha de cosecha</label>
       <input type="date" id="fecha">
@@ -529,6 +529,7 @@ Cochamolles 100 trz ZP3485 cul 6902 — no lo habían pasado"></textarea>
   <section class="panel" id="p-estimado">
     <div class="grid-pegar no-print">
       <div>
+        <div id="aviso-est"></div>
         <textarea id="chat-est" placeholder="Pegá acá los mensajes de la mañana: cuadrillas, personas y estimado."></textarea>
         <div class="tipo-dato no-print">
           <button class="td-op on" data-td="ESTIMADO">Estimado · mañana</button>
@@ -1350,7 +1351,8 @@ async function nubeSubir(){
     const cuerpo={fields:{
       json:{stringValue: JSON.stringify({bloques:state.bloques, estimado:state.estimado,
              ajustes:state.ajustes, correcciones:state.correcciones, tipoDato:state.tipoDato,
-             pbi:state.pbi, textoChat:state.textoChat})},
+             pbi:state.pbi, textoChat:state.textoChat, chatCuando:state.chatCuando,
+             textoEst:state.textoEst, estCuando:state.estCuando})},
       rev:{integerValue:String(rev)},
       quien:{stringValue: NUBE.quien||'sin nombre'},
       cliente:{stringValue: NUBE.yo},
@@ -1393,7 +1395,8 @@ async function nubeBajar(avisar){
     NUBE.ultimaRev=rev;
     render();
     const ta=document.getElementById('chat'); if(ta) ta.value=state.textoChat||'';
-    repoblarChat();
+    const te=document.getElementById('chat-est'); if(te) te.value=state.textoEst||'';
+    repoblarChat(); repoblarEst();
     const q=f.quien?.stringValue||'', c=f.cuando?.stringValue;
     nubeEstado(`Traído de la nube · última carga de <b>${esc(q)}</b>${c?' a las '+new Date(c).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}):''}`,'ok');
   }catch(err){
@@ -2139,7 +2142,9 @@ document.querySelectorAll('.td-op').forEach(b=>b.onclick=()=>{
   guardar(); renderEstimado();
 });
 document.getElementById('btn-est').onclick=()=>{
-  state.estimado=parsearEstimado(document.getElementById('chat-est').value);
+  state.textoEst=document.getElementById('chat-est').value;
+  state.estCuando=new Date().toISOString();
+  state.estimado=parsearEstimado(state.textoEst);
   guardar(); renderEstimado();
 };
 document.getElementById('btn-copiar-cuadro').onclick=copiarCuadro;
@@ -2429,6 +2434,24 @@ Sup torres`;
 
 // Al abrir, la caja vuelve con lo último que se pegó y una línea avisa que
 // ese día ya viene trabajado, para no arrancar creyendo que está vacío.
+// misma idea para la caja del estimado de la mañana
+function repoblarEst(){
+  const ta=document.getElementById('chat-est');
+  const av=document.getElementById('aviso-est');
+  if(!ta||!av) return;
+  if(!state.textoEst){ av.innerHTML=''; return; }
+  if(!ta.value) ta.value=state.textoEst;
+  const n=(state.estimado||[]).length;
+  let cuando='';
+  if(state.estCuando){
+    const d=new Date(state.estCuando);
+    cuando=' el '+d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})+
+           ' a las '+d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+  av.innerHTML='<div class="ya-trabajado">Estos mensajes los pegaste'+cuando+
+    (n?'. El cuadro ya tiene <b>'+n+'</b> '+(n===1?'finca':'fincas'):'')+'.</div>';
+}
+
 function repoblarChat(){
   const ta=document.getElementById('chat');
   const av=document.getElementById('aviso-chat');
@@ -2452,6 +2475,7 @@ function repoblarChat(){
   document.getElementById('fecha').value=state.fecha;
   render();
   repoblarChat();
+  repoblarEst();
 })();
 </script>
 </body>

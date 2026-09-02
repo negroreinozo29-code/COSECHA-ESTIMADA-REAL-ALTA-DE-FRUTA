@@ -441,7 +441,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
 
 <header class="top">
   <div class="top-in">
-    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.13</b></div>
+    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.14</b></div>
     <div class="fecha-box">
       <label for="fecha">Fecha de cosecha</label>
       <input type="date" id="fecha">
@@ -694,8 +694,8 @@ const MAESTRA_INICIAL = [
   {finca:'LULES',          alias:'lules',                           emp:'AGRO SELECTA',bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false,prod:'SA SAN MIGUEL',zona:'SUR',aplic:'AP0'},
   {finca:'LULES',          alias:'lules',                           emp:'KM 14',       bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'AP0'},
   // ---- terceros de la temporada: traza y cul fijos (a completar) ----
-  {finca:'DELOTTE',                   alias:'delotte, deloitte, el potrero, potrero',                               emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP3993',cul:'9201',tercero:true,codMat:'FASON',prod:'INDUCITRICA S.A.',zona:'',aplic:'AZ2', empCuadro:'INDUCITRICA'},
-  {finca:'DONATO ALVAREZ',            alias:'donato, donato alvarez, d alvarez, d.a, da',               emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP3994',cul:'9301',tercero:true,codMat:'FASON',prod:'INDUCITRICA S.A.',zona:'',aplic:'AZ2', empCuadro:'INDUCITRICA'},
+  {finca:'DELOTTE',                   alias:'delotte, deloitte, el potrero, potrero',                               emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP3993',cul:'9201',tercero:true,codMat:'COSECHA-MANO',prod:'INDUCITRICA S.A.',zona:'',aplic:'AZ2', empCuadro:'INDUCITRICA'},
+  {finca:'DONATO ALVAREZ',            alias:'donato, donato alvarez, d alvarez, d.a, da',               emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP3994',cul:'9301',tercero:true,codMat:'COSECHA-MANO',prod:'INDUCITRICA S.A.',zona:'',aplic:'AZ2', empCuadro:'INDUCITRICA'},
   {finca:'SANTA LUCIA-SOTILLO',       alias:'sotillo, santa lucia',                            emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4118',cul:'9817',tercero:true,codMat:'COSECHA-MANO',prod:'LA CORUÑA',zona:'',aplic:'AZ2'},
   {finca:'DON OCTAVIO I',             alias:'don octavio, d octavio, octavio',                 emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'D1C1',cul:'5601',tercero:true,codMat:'COSECHA-MANO',prod:'DON OCTAVIO SRL',zona:'',aplic:'AP1'},
   {finca:'LAS MARIAS - NYNAGRO',      alias:'las marias, marias, nynagro, marias nynagro',                     emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4148',cul:'9839',tercero:true,codMat:'COSECHA-MANO',prod:'NYNAGRO S.R.L.',zona:'',aplic:'AZ2'},
@@ -707,17 +707,21 @@ const MAESTRA_INICIAL = [
   {finca:'LOS NOGALES - FYL TRANS',   alias:'los nogales, nogales, fyl, fyl trans',            emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4156',cul:'9847',tercero:true,codMat:'COSECHA-MANO',prod:'FYL TRANS',zona:'',aplic:'AZ2'},
     {finca:'LA RINCONADA-P&M CITRUS', alias:'rinconada, la rinconada, pym, py m, p&m, pm citrus, p&m citrus', emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4153',cul:'9844',tercero:true,codMat:'COSECHA-MANO',prod:'P&M CITRUS SRL',zona:'',aplic:'AZ1'},
   {finca:'CEBIL CON AGUA',            alias:'cebil, cebil con agua',                           emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'E1B01',cul:'6101',tercero:true,codMat:'COSECHA-MANO',prod:'AGRICOLA EL BARCO',zona:'',aplic:'AZ2'},
-  {finca:'PANI - ALTO NARANJO',       alias:'pani, alto naranjo, alto del naranjo, cochamolle pani, cochamolles pani',                              emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'A8N01',cul:'5021',tercero:true,codMat:'COSECHA-MANO',prod:'ALTO DEL NARANJO S.A.',zona:'',aplic:'AP0'},
+  {finca:'PANI - ALTO NARANJO',       alias:'pani, pani alto naranjo, cochamolle pani, cochamolles pani',                              emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'A8N01',cul:'5021',tercero:true,codMat:'COSECHA-MANO',prod:'ALTO DEL NARANJO S.A.',zona:'',aplic:'AP0'},
+  // Pani y El Galpón son dos lotes distintos del mismo productor: cada uno
+  // con su traza. Antes "alto naranjo" caía siempre en Pani.
+  {finca:'EL GALPON - ALTO NARANJO', alias:'el galpon, galpon, galpon alto naranjo, el galpon alto naranjo', emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'A8C01',cul:'5001',tercero:true,codMat:'COSECHA-MANO',prod:'ALTO DEL NARANJO S.A.',zona:'',aplic:'AP0'},
+  {finca:'LA VILLA - LOS 4 SOLES',   alias:'la villa, los 4 soles, 4 soles, cuatro soles, la villa los 4 soles, villa 4 soles', emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4102',cul:'9801',tercero:true,codMat:'COSECHA-MANO',prod:'CUATRO SOLES',zona:'',aplic:'P1'},
   {finca:'LOS PIZARROS- SAG EXP',     alias:'pizarros, los pizarros, sag, sag exp, longo, fca longo, sagitario',            emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4174',cul:'9865',tercero:true,codMat:'COSECHA-MANO',prod:'SAGITARIO EXPORTACION',zona:'',aplic:'AZ1'},
   {finca:'SAUCE HUASCHO-LA ROSA',     alias:'sauce huascho, sauce, huascho, la rosa',                   emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'L1S1',cul:'5101',tercero:true,codMat:'COSECHA-MANO',prod:'LA ROSA SRL',zona:'',aplic:'AZ2'},
   {finca:'FINCA LOS PUESTITOS',       alias:'puestitos, los puestitos',                        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4051',cul:'9949',tercero:true,codMat:'COSECHA-MANO',prod:'AGRO ALIANZA',zona:'',aplic:'AZ1'},
-  {finca:'BLAZQUEZ',                  alias:'blazquez, blazques, yaquilo',                              emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4044',cul:'9942',tercero:true,codMat:'FASON',prod:'INDUCITRICA S.A.',zona:'',aplic:'AZ2', empCuadro:'INDUCITRICA'},
+  {finca:'BLAZQUEZ',                  alias:'blazquez, blazques, yaquilo',                              emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4044',cul:'9942',tercero:true,codMat:'COSECHA-MANO',prod:'INDUCITRICA S.A.',zona:'',aplic:'AZ2', empCuadro:'INDUCITRICA'},
 ];
 
 const TN_POR_BIN = 0.4;
 // Subir este número cada vez que cambie la maestra del archivo:
 // así la copia guardada en el navegador no tapa la versión nueva.
-const MAESTRA_VERSION = 11;
+const MAESTRA_VERSION = 12;
 
 let state = {
   mv: MAESTRA_VERSION,

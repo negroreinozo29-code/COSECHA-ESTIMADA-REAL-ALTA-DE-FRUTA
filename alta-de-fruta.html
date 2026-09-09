@@ -441,7 +441,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
 
 <header class="top">
   <div class="top-in">
-    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.14</b></div>
+    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.18</b></div>
     <div class="fecha-box">
       <label for="fecha">Fecha de cosecha</label>
       <input type="date" id="fecha">
@@ -683,9 +683,16 @@ const MAESTRA_INICIAL = [
   // fija la variedad: la toma del mensaje, y la aplicación sale de ahí (ORG o AP0).
   {finca:'SOFIA III',      alias:'sofia 3, f sofia 3, sofia iii, sofia 03', emp:'RANDSTAD', bins:'BOLSON', mat:'', traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', zona:'NORTE', aplic:''},
   {finca:'SOFIA III',      alias:'sofia 3, f sofia 3, sofia iii, sofia 03', emp:'SAPSAS',   bins:'BIN',    mat:'', traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', zona:'NORTE', aplic:''},
+  // Con Asturiana puede venir en bin o en bolsón: el envase lo dice el mensaje.
+  // Si no lo aclara, queda bolsón.
+  {finca:'SOFIA III',      alias:'sofia 3, f sofia 3, sofia iii, sofia 03', emp:'LA ASTURIANA', bins:'BOLSON', envaseDelMsg:true, mat:'', traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', zona:'NORTE', aplic:''},
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'LA ASTURIANA',bins:'BOLSON', mat:'CONVENCIONAL',traza:'', cul:'', tercero:false,prod:'SA SAN MIGUEL',zona:'SUR',aplic:'AP0'},
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'SAPSAS',      bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'AP0'},
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'RANDSTAD',    bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'AP0'},
+  {finca:'ARROYO TRAPANI',          alias:'arroyo trapani, arroyo, trapani, fgf trapani, f arroyo',                    emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4150',cul:'9841',tercero:true,codMat:'COSECHA-MANO',prod:'FGF TRAPANI',zona:'',aplic:'AP1'},
+  {finca:'LA PONDEROSA',            alias:'la ponderosa, ponderosa, ponderosa citrus',                                 emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'T1P01',cul:'5722',tercero:true,codMat:'COSECHA-MANO',prod:'LA PONDEROSA CITRUS',zona:'',aplic:'AP0'},
+  {finca:'CASPINCHANGO SALOMON',    alias:'caspinchango salomon, casp salomon, salomon, caspinchango s',              emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'A8B01',cul:'5076',tercero:true,codMat:'COSECHA-MANO',prod:'ALTO DEL NARANJO S.A.',zona:'',aplic:'AP0'},
+  {finca:'MONTE BELLO - SAGITARIO', alias:'monte bello, montebello, monte bello sagitario, m bello',                   emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4173',cul:'9864',tercero:true,codMat:'COSECHA-MANO',prod:'SAGITARIO EXPORTACION',zona:'',aplic:'AP0'},
   {finca:'ARBOL SOLO',      alias:'arbol solo, árbol solo, f arbol solo, arbolsolo, arbol', emp:'LA ASTURIANA', bins:'BIN', mat:'CONVENCIONAL', traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', zona:'', aplic:'AP0'},
   {finca:'ARBOL SOLO',      alias:'arbol solo, árbol solo, f arbol solo, arbolsolo, arbol', emp:'SAPSAS',       bins:'BIN', mat:'CONVENCIONAL', traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', zona:'', aplic:'AP0'},
   {finca:'CASPINCHANGO',   alias:'caspinchango, caspi, casp',       emp:'LA ASTURIANA',bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false,prod:'SA SAN MIGUEL',zona:'SUR',aplic:'AP0'},
@@ -721,7 +728,7 @@ const MAESTRA_INICIAL = [
 const TN_POR_BIN = 0.4;
 // Subir este número cada vez que cambie la maestra del archivo:
 // así la copia guardada en el navegador no tapa la versión nueva.
-const MAESTRA_VERSION = 12;
+const MAESTRA_VERSION = 14;
 
 let state = {
   mv: MAESTRA_VERSION,
@@ -1055,7 +1062,9 @@ function parsearMensaje(msg){
     fincaRef: fila,
     empNom: emp ? emp.nom : 'SIN IDENTIFICAR',
     empCod: emp ? emp.cod : '',
-    envase: fila ? fila.bins : (envMsg||'BIN'),
+    // en algunas combinaciones el envase cambia día a día: ahí manda el
+    // mensaje y la maestra queda solo como respaldo
+    envase: fila ? ((fila.envaseDelMsg && envMsg) ? envMsg : fila.bins) : (envMsg||'BIN'),
     envaseMsg: envMsg,
     material: mat || (fila ? fila.mat : 'CONVENCIONAL'),
     codMat: fila ? (fila.codMat||'') : '',
@@ -1088,10 +1097,22 @@ function extraerTerceros(texto){
     if(!l.trim() || RE_TRAZA.test(despegar(l))){ quedan.push(l); return; }
     const fs=tercerosEnLinea(l);
     if(!fs.length){ quedan.push(l); return; }
+    // Hay fincas con número en el nombre ("los 4 soles"): ese número es parte
+    // del nombre, no la cantidad. Lo saco del texto antes de buscar cantidades.
+    let lim=l;
+    fs.forEach(f=>{
+      const alias=String(f.alias||'').split(',').map(a=>a.trim()).filter(a=>/\d/.test(a));
+      alias.concat(/\d/.test(f.finca)?[f.finca]:[])
+        .sort((a,b)=>b.length-a.length)
+        .forEach(a=>{
+          const re=new RegExp(a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'\\s+'),'ig');
+          lim=lim.replace(re,' ');
+        });
+    });
     // números de la línea, sin decimales, porcentajes ni medidas
     const nums=[];
-    l.replace(/(\d{1,5})(?![.,]\d)(?!\s*(?:%|mm|cm))/gi,(m,d,off)=>{
-      const post=l.slice(off+d.length,off+d.length+3);
+    lim.replace(/(\d{1,5})(?![.,]\d)(?!\s*(?:%|mm|cm))/gi,(m,d,off)=>{
+      const post=lim.slice(off+d.length,off+d.length+3);
       if(!/^[.,]?\d/.test(post)) nums.push(parseInt(d,10));
       return m;
     });
@@ -1253,7 +1274,7 @@ function calcAvisos(){
     if(b.comboNueva){
       av.push({tipo:'wa',txt:`<b>${esc(b.fincaNom)}</b> con ${esc(b.empNom)} no está en la maestra. Usé el envase de otra combinación de la misma finca — verificá si va bin o bolsón.`});
     }
-    if(b.envaseMsg && b.envaseMsg!==b.envase){
+    if(b.envaseMsg && b.envaseMsg!==b.envase && !(b.fincaRef && b.fincaRef.envaseDelMsg)){
       av.push({tipo:'wa',txt:`<b>${esc(b.fincaNom)}</b> — en el mensaje dice ${b.envaseMsg==='BIN'?'bins':'bolsones'} y la maestra dice ${b.envase==='BIN'?'bins':'bolsones'}. Vale la maestra.`});
     }
     b.lotes.forEach(l=>{

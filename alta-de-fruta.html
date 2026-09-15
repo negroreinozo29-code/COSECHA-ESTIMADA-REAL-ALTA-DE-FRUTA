@@ -441,7 +441,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
 
 <header class="top">
   <div class="top-in">
-    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.18</b></div>
+    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.21</b></div>
     <div class="fecha-box">
       <label for="fecha">Fecha de cosecha</label>
       <input type="date" id="fecha">
@@ -689,6 +689,9 @@ const MAESTRA_INICIAL = [
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'LA ASTURIANA',bins:'BOLSON', mat:'CONVENCIONAL',traza:'', cul:'', tercero:false,prod:'SA SAN MIGUEL',zona:'SUR',aplic:'AP0'},
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'SAPSAS',      bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'AP0'},
   {finca:'MONTE GRANDE',   alias:'monte grande, mg, m. grande',     emp:'RANDSTAD',    bins:'BIN',    mat:'CONVENCIONAL',traza:'', cul:'', tercero:false, prod:'SA SAN MIGUEL', aplic:'AP0'},
+  {finca:'FINCA MEDINA - SAGITARIO', alias:'finca medina, medina, medina sagitario',                        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4176',cul:'9867',tercero:true,codMat:'COSECHA-MANO',prod:'SAGITARIO EXPORTACION',zona:'',aplic:'AP1'},
+  {finca:'DIAMANTE - FRUTEX',        alias:'diamante, diamante frutex, el diamante',                        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4175',cul:'9866',tercero:true,codMat:'COSECHA-MANO',prod:'FRUTEX',zona:'',aplic:'AP1'},
+  {finca:'LOS SOSA - LA CORUÑA',     alias:'los sosa, sosa, los sosa la coruña, los sosa la coruna',        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'L2CO601',cul:'5933',tercero:true,codMat:'COSECHA-MANO',prod:'LA CORUÑA',zona:'',aplic:'AP1'},
   {finca:'ARROYO TRAPANI',          alias:'arroyo trapani, arroyo, trapani, fgf trapani, f arroyo',                    emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4150',cul:'9841',tercero:true,codMat:'COSECHA-MANO',prod:'FGF TRAPANI',zona:'',aplic:'AP1'},
   {finca:'LA PONDEROSA',            alias:'la ponderosa, ponderosa, ponderosa citrus',                                 emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'T1P01',cul:'5722',tercero:true,codMat:'COSECHA-MANO',prod:'LA PONDEROSA CITRUS',zona:'',aplic:'AP0'},
   {finca:'CASPINCHANGO SALOMON',    alias:'caspinchango salomon, casp salomon, salomon, caspinchango s',              emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'A8B01',cul:'5076',tercero:true,codMat:'COSECHA-MANO',prod:'ALTO DEL NARANJO S.A.',zona:'',aplic:'AP0'},
@@ -707,7 +710,7 @@ const MAESTRA_INICIAL = [
   {finca:'DON OCTAVIO I',             alias:'don octavio, d octavio, octavio',                 emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'D1C1',cul:'5601',tercero:true,codMat:'COSECHA-MANO',prod:'DON OCTAVIO SRL',zona:'',aplic:'AP1'},
   {finca:'LAS MARIAS - NYNAGRO',      alias:'las marias, marias, nynagro, marias nynagro',                     emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4148',cul:'9839',tercero:true,codMat:'COSECHA-MANO',prod:'NYNAGRO S.R.L.',zona:'',aplic:'AZ2'},
   {finca:'COCHAMOLLES-CEYVO',         alias:'cochamolles ceybo, cochamolle ceybo, cochamolles ceyvo, cochamolle ceyvo, ceyvo, ceybo',                       emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP3485',cul:'6902',tercero:true,codMat:'COSECHA-MANO',prod:'AGROP. EL CEYBO',zona:'NORTE',aplic:'AP0'},
-  {finca:'CAP. CACERES-FRUTEX',       alias:'caceres, cap caceres, frutex',                    emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4110',cul:'9809',tercero:true,codMat:'COSECHA-MANO',prod:'FRUTEX',zona:'',aplic:'AZ2'},
+  {finca:'CAP. CACERES-FRUTEX',       alias:'caceres, cap caceres, capitan caceres, cap. caceres',                    emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4110',cul:'9809',tercero:true,codMat:'COSECHA-MANO',prod:'FRUTEX',zona:'',aplic:'AZ2'},
   {finca:'EL RODEO -LEDESMA',         alias:'rodeo, el rodeo, ledesma, rodeo norte',                        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4024',cul:'9922',tercero:true,codMat:'FASON',prod:'LEDESMA',zona:'',aplic:'AP1'},
   {finca:'LULES NOUGUES',             alias:'nougues, nogues, lules nougues, lules nogues',    emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'N6L0101',cul:'4901',tercero:true,codMat:'COSECHA-MANO',prod:'NOGUES SRL',zona:'',aplic:'AP1'},
   {finca:'PUERTA NEGRA',              alias:'puerta negra, p negra, p. negra, los changos, changos',                 emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP3637',cul:'6501',tercero:true,codMat:'COSECHA-MANO',prod:'LOS CHANGOS',zona:'',aplic:'AP0'},
@@ -719,7 +722,7 @@ const MAESTRA_INICIAL = [
   // con su traza. Antes "alto naranjo" caía siempre en Pani.
   {finca:'EL GALPON - ALTO NARANJO', alias:'el galpon, galpon, galpon alto naranjo, el galpon alto naranjo', emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'A8C01',cul:'5001',tercero:true,codMat:'COSECHA-MANO',prod:'ALTO DEL NARANJO S.A.',zona:'',aplic:'AP0'},
   {finca:'LA VILLA - LOS 4 SOLES',   alias:'la villa, los 4 soles, 4 soles, cuatro soles, la villa los 4 soles, villa 4 soles', emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4102',cul:'9801',tercero:true,codMat:'COSECHA-MANO',prod:'CUATRO SOLES',zona:'',aplic:'P1'},
-  {finca:'LOS PIZARROS- SAG EXP',     alias:'pizarros, los pizarros, sag, sag exp, longo, fca longo, sagitario',            emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4174',cul:'9865',tercero:true,codMat:'COSECHA-MANO',prod:'SAGITARIO EXPORTACION',zona:'',aplic:'AZ1'},
+  {finca:'LOS PIZARROS- SAG EXP',     alias:'pizarros, los pizarros, longo, fca longo, pizarros sag',            emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4174',cul:'9865',tercero:true,codMat:'COSECHA-MANO',prod:'SAGITARIO EXPORTACION',zona:'',aplic:'AZ1'},
   {finca:'SAUCE HUASCHO-LA ROSA',     alias:'sauce huascho, sauce, huascho, la rosa',                   emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'L1S1',cul:'5101',tercero:true,codMat:'COSECHA-MANO',prod:'LA ROSA SRL',zona:'',aplic:'AZ2'},
   {finca:'FINCA LOS PUESTITOS',       alias:'puestitos, los puestitos',                        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4051',cul:'9949',tercero:true,codMat:'COSECHA-MANO',prod:'AGRO ALIANZA',zona:'',aplic:'AZ1'},
   {finca:'BLAZQUEZ',                  alias:'blazquez, blazques, yaquilo',                              emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4044',cul:'9942',tercero:true,codMat:'COSECHA-MANO',prod:'INDUCITRICA S.A.',zona:'',aplic:'AZ2', empCuadro:'INDUCITRICA'},
@@ -728,7 +731,7 @@ const MAESTRA_INICIAL = [
 const TN_POR_BIN = 0.4;
 // Subir este número cada vez que cambie la maestra del archivo:
 // así la copia guardada en el navegador no tapa la versión nueva.
-const MAESTRA_VERSION = 14;
+const MAESTRA_VERSION = 16;
 
 let state = {
   mv: MAESTRA_VERSION,
@@ -1118,10 +1121,11 @@ function extraerTerceros(texto){
     });
     // ambigua: la aparto para que no contamine los otros mensajes
     if(nums.length!==1){ if(nums.length>1) dudas.push(l.trim()); else quedan.push(l); return; }
+    const _lineaOrigen=l.trim();
     if(fs.length>1){ dudas.push(l.trim()); return; }
     const f=fs[0], c=state.contratistas.find(x=>x.nom===f.emp);
     bloques.push({
-      id:uid(), fincaNom:f.finca, fincaRef:f,
+      id:uid(), fincaNom:f.finca, fincaRef:f, lineaOrigen:_lineaOrigen,
       empNom:c?c.nom:'NO APLICA', empCod:c?c.cod:'0NO APLICA',
       envase:f.bins, envaseMsg:null, material:f.mat, codMat:f.codMat||'', tercero:true,
       comboNueva:false, empAdivinada:false, desconocida:false,
@@ -1212,6 +1216,22 @@ function parsear(){
     }else map.set(k,b);
   });
   state.bloques=[...map.values()];
+
+  // Una línea con un número que no quedó dentro de ningún mensaje ni de
+  // ninguna finca no puede perderse en silencio.
+  // se dan por usadas solo las líneas de los mensajes que sí produjeron finca
+  const usadas=new Set();
+  msgs.forEach(m=>{
+    if((parsearMensaje(m)||[]).length) m.lineas.forEach(l=>usadas.add(l.trim()));
+  });
+  ter.bloques.forEach(b=>usadas.add(String(b.lineaOrigen||'').trim()));
+  state.sueltas = txt.split('\n').map(l=>l.trim()).filter(l=>{
+    if(!l || !/\d/.test(l)) return false;
+    if(usadas.has(l)) return false;
+    if((ter.dudas||[]).includes(l)) return false;
+    if(tercerosEnLinea(l).length || buscarFinca(l)) return false;
+    return true;
+  });
   descontarPBI();           // si el cuadro del Power BI está pegado, descuenta solo
   guardar();
   render();
@@ -1232,6 +1252,9 @@ function calcAvisos(){
     if(ya && ya>(+l.cant||0)) av.push({tipo:'err',txt:
       `<b>${esc(b.fincaNom)}</b> — cul ${esc(l.cul)}: ya hay ${ya} bins dados de alta y la cosecha declara ${l.cant}. Hay ${ya-(+l.cant||0)} de más.`});
   }));
+  (state.sueltas||[]).forEach(l=>av.push({tipo:'wa',txt:
+    `No pude leer esta línea: <b>${esc(l)}</b>. Si nombra solo al productor y tiene varias fincas, hay que decir cuál. Cargala a mano en la hoja.`}));
+
   (state.dudas||[]).forEach(l=>av.push({tipo:'wa',txt:
     `No pude interpretar esta línea sin adivinar: <b>${esc(l)}</b>. Cargala a mano si corresponde.`}));
   // Regla del negocio: una trazabilidad tiene un solo cul.

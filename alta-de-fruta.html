@@ -441,7 +441,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
 
 <header class="top">
   <div class="top-in">
-    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.24</b></div>
+    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.25</b></div>
     <div class="fecha-box">
       <label for="fecha">Fecha de cosecha</label>
       <input type="date" id="fecha">
@@ -2042,9 +2042,11 @@ function tablaCosecha(filas, tipo){
       <td class="r">${sC||''}</td><td class="r">${sP||''}</td><td class="r">${sB}</td><td class="r">${fmtTn(sT)}</td>
       <td class="r">${sP?Math.round(sB/sP*JORNAL):''}</td></tr>`;
   });
+  // Cuadrillas, personas y productividad quedan solo en Total Propia: en el
+  // total general mezclarían los bins de terceros con el personal propio.
   html+=`</tbody><tfoot><tr><td colspan="7">Total general</td>
-    <td class="r">${tC||''}</td><td class="r">${tP||''}</td><td class="r">${tB}</td><td class="r">${fmtTn(tT)}</td>
-    <td class="r">${tP?Math.round(tB/tP*JORNAL):''}</td></tr></tfoot></table>`;
+    <td class="r"></td><td class="r"></td><td class="r">${tB}</td><td class="r">${fmtTn(tT)}</td>
+    <td class="r"></td></tr></tfoot></table>`;
   return html;
 }
 
@@ -2095,9 +2097,9 @@ function cuadroCorreoHTML(filas, tipo){
       <td style="${subr}">${sP?Math.round(sB/sP*JORNAL):''}</td></tr>`;
   });
   h+=`<tr><td colspan="7" style="${tot}">Total general</td>
-    <td style="${totr}">${tC||''}</td><td style="${totr}">${tP||''}</td>
+    <td style="${totr}"></td><td style="${totr}"></td>
     <td style="${totr}">${tB}</td><td style="${totr}">${fmtTn(tT)}</td>
-    <td style="${totr}">${tP?Math.round(tB/tP*JORNAL):''}</td></tr></table>`;
+    <td style="${totr}"></td></tr></table>`;
   return h;
 }
 

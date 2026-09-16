@@ -441,7 +441,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
 
 <header class="top">
   <div class="top-in">
-    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.21</b></div>
+    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.22</b></div>
     <div class="fecha-box">
       <label for="fecha">Fecha de cosecha</label>
       <input type="date" id="fecha">
@@ -692,6 +692,7 @@ const MAESTRA_INICIAL = [
   {finca:'FINCA MEDINA - SAGITARIO', alias:'finca medina, medina, medina sagitario',                        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4176',cul:'9867',tercero:true,codMat:'COSECHA-MANO',prod:'SAGITARIO EXPORTACION',zona:'',aplic:'AP1'},
   {finca:'DIAMANTE - FRUTEX',        alias:'diamante, diamante frutex, el diamante',                        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4175',cul:'9866',tercero:true,codMat:'COSECHA-MANO',prod:'FRUTEX',zona:'',aplic:'AP1'},
   {finca:'LOS SOSA - LA CORUÑA',     alias:'los sosa, sosa, los sosa la coruña, los sosa la coruna',        emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'L2CO601',cul:'5933',tercero:true,codMat:'COSECHA-MANO',prod:'LA CORUÑA',zona:'',aplic:'AP1'},
+  {finca:'CONTE - ALTO NARANJO',    alias:'conte, conte alto naranjo, finca conte',                       emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'A8D11',cul:'5058',tercero:true,codMat:'COSECHA-MANO',prod:'ALTO DEL NARANJO S.A.',zona:'',aplic:'AP0'},
   {finca:'ARROYO TRAPANI',          alias:'arroyo trapani, arroyo, trapani, fgf trapani, f arroyo',                    emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'ZP4150',cul:'9841',tercero:true,codMat:'COSECHA-MANO',prod:'FGF TRAPANI',zona:'',aplic:'AP1'},
   {finca:'LA PONDEROSA',            alias:'la ponderosa, ponderosa, ponderosa citrus',                                 emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'T1P01',cul:'5722',tercero:true,codMat:'COSECHA-MANO',prod:'LA PONDEROSA CITRUS',zona:'',aplic:'AP0'},
   {finca:'CASPINCHANGO SALOMON',    alias:'caspinchango salomon, casp salomon, salomon, caspinchango s',              emp:'NO APLICA',bins:'BIN',mat:'CONVENCIONAL',traza:'A8B01',cul:'5076',tercero:true,codMat:'COSECHA-MANO',prod:'ALTO DEL NARANJO S.A.',zona:'',aplic:'AP0'},
@@ -731,7 +732,7 @@ const MAESTRA_INICIAL = [
 const TN_POR_BIN = 0.4;
 // Subir este número cada vez que cambie la maestra del archivo:
 // así la copia guardada en el navegador no tapa la versión nueva.
-const MAESTRA_VERSION = 16;
+const MAESTRA_VERSION = 17;
 
 let state = {
   mv: MAESTRA_VERSION,

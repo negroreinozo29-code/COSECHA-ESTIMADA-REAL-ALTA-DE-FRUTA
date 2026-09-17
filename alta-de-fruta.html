@@ -441,7 +441,7 @@ textarea#chat-est:focus{outline:2px solid var(--tinta);outline-offset:-1px}
 
 <header class="top">
   <div class="top-in">
-    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.25</b></div>
+    <div class="marca">Alta de Fruta <span>/ turno noche</span> <b class="ver" title="Versión que está corriendo. Si no coincide con la última que subiste, abrí con Ctrl+F5.">v1.26</b></div>
     <div class="fecha-box">
       <label for="fecha">Fecha de cosecha</label>
       <input type="date" id="fecha">
@@ -1950,19 +1950,43 @@ function asignarNumeros(txt){
     const re=new RegExp('(?:'+pat+')','g');
     while((m=re.exec(n))) etq.push({k, i:m.index, f:m.index+m[0].length, usado:false});
   });
-  // todos los pares posibles, del más pegado al más lejano
-  const pares=[];
-  etq.forEach(e=>nums.forEach(x=>{
-    const gap = x.i>=e.f ? x.i-e.f : (x.f<=e.i ? e.i-x.f : 0);
-    if(gap<=14) pares.push({e,x,gap});
-  }));
-  pares.sort((a,b)=>a.gap-b.gap);
-  const out={};
-  pares.forEach(({e,x})=>{
-    if(e.usado||x.usado||out[e.k]!==undefined) return;
-    e.usado=true; x.usado=true; out[e.k]=x.v;
+  // Se prueba el reparto completo y se elige el que deja cada número lo más
+  // cerca posible de su palabra. Ir de a uno fallaba cuando un número queda
+  // entre dos palabras: "Personas: 56 Estimado 120" daba bins 56 y pers 120,
+  // porque "estimado" agarraba el 56 antes de que lo tomara "personas".
+  const gapDe=(e,x)=> x.i>=e.f ? x.i-e.f : (x.f<=e.i ? e.i-x.f : 0);
+  const claves=[...new Set(etq.map(e=>e.k))];
+  const opciones={};
+  claves.forEach(k=>{
+    const cands=[];
+    etq.filter(e=>e.k===k).forEach(e=>nums.forEach((x,xi)=>{
+      const g=gapDe(e,x);
+      if(g<=14) cands.push({xi, v:x.v, gap:g});
+    }));
+    cands.sort((a,b)=>a.gap-b.gap);
+    opciones[k]=cands;
   });
-  return out;
+
+  let mejor=null;
+  (function probar(i, usados, elegido, suma){
+    if(i===claves.length){
+      const n=Object.keys(elegido).length;
+      if(!mejor || n>mejor.n || (n===mejor.n && suma<mejor.suma))
+        mejor={n, suma, sel:{...elegido}};
+      return;
+    }
+    const k=claves[i];
+    // esta palabra puede quedar sin número
+    probar(i+1, usados, elegido, suma);
+    opciones[k].forEach(c=>{
+      if(usados.has(c.xi)) return;
+      usados.add(c.xi); elegido[k]=c.v;
+      probar(i+1, usados, elegido, suma+c.gap);
+      usados.delete(c.xi); delete elegido[k];
+    });
+  })(0, new Set(), {}, 0);
+
+  return mejor ? mejor.sel : {};
 }
 
 function parsearEstimado(texto){
